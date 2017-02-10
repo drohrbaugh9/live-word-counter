@@ -37,13 +37,6 @@ import java.awt.*;              //for layout managers and more
 import java.awt.event.*;        //for action events
 
 public class LiveWordCounter extends JPanel implements ActionListener {
-    private String newline = "\n";
-    protected static final String textFieldString = "JTextField";
-    protected static final String passwordFieldString = "JPasswordField";
-    protected static final String ftfString = "JFormattedTextField";
-    protected static final String buttonString = "JButton";
-
-    protected JLabel actionLabel;
 
     public LiveWordCounter() {
         JTextArea textArea = new JTextArea("text");
@@ -57,36 +50,15 @@ public class LiveWordCounter extends JPanel implements ActionListener {
         add(areaScrollPane, BorderLayout.CENTER);
     }
 
-    public void actionPerformed(ActionEvent e) {}
-
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event dispatch thread.
-     */
-    private static void createAndShowGUI() {
-        //Create and set up the window.
+    public static void main(String[] args) {
         JFrame frame = new JFrame("LiveWordCounter");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //Add content to the window.
+        
         frame.add(new LiveWordCounter());
-
-        //Display the window.
+        
         frame.pack();
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        //Schedule a job for the event dispatching thread:
-        //creating and showing this application's GUI.
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                 //Turn off metal's use of bold fonts
-		UIManager.put("swing.boldMetal", Boolean.FALSE);
-		createAndShowGUI();
-            }
-        });
-       
-    }
+    public void actionPerformed(ActionEvent e) {}
 }
