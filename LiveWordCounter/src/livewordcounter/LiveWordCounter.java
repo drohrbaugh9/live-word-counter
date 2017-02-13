@@ -39,7 +39,7 @@ import java.awt.event.*;        //for action events
 public class LiveWordCounter extends JPanel implements ActionListener {
 
     public LiveWordCounter() {
-        JTextArea textArea = new JTextArea("text");
+        JTextArea textArea = new JTextArea("Type here...");
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         JScrollPane areaScrollPane = new JScrollPane(textArea);
@@ -56,9 +56,12 @@ public class LiveWordCounter extends JPanel implements ActionListener {
         
         frame.add(new LiveWordCounter());
         
+        
         frame.pack();
         frame.setVisible(true);
     }
 
-    public void actionPerformed(ActionEvent e) {}
+    public void actionPerformed(ActionEvent e) {
+        System.out.println(e.toString());
+    }
 }
