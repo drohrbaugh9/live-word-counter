@@ -36,10 +36,14 @@ import javax.swing.*;
 import java.awt.*;              //for layout managers and more
 import java.awt.event.*;        //for action events
 
-public class LiveWordCounter extends JPanel implements ActionListener {
+public class LiveWordCounter extends JPanel implements KeyListener {
+    
+    boolean firstTime = true;
+    JTextArea textArea;
 
     public LiveWordCounter() {
-        JTextArea textArea = new JTextArea("Type here...");
+        textArea = new JTextArea("Type here...");
+        //textArea.setText("Don't type here...");
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         JScrollPane areaScrollPane = new JScrollPane(textArea);
@@ -48,20 +52,34 @@ public class LiveWordCounter extends JPanel implements ActionListener {
         areaScrollPane.setPreferredSize(new Dimension(250, 250));
         
         add(areaScrollPane, BorderLayout.CENTER);
+        
+        addKeyListener(this);
     }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("LiveWordCounter");
+        frame.setTitle("Live Word Counter");
+        //frame.setSize();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        frame.add(new LiveWordCounter());
+        Container contentPane = frame.getContentPane();
+        contentPane.add(new LiveWordCounter());
         
+        //frame.add(new LiveWordCounter());
         
         frame.pack();
         frame.setVisible(true);
     }
-
-    public void actionPerformed(ActionEvent e) {
-        System.out.println(e.toString());
+    
+    public void keyPressed(KeyEvent evt) {
+        if (firstTime) {
+            textArea.setText("");
+            firstTime = false;
+        }
+        System.out.println(evt.toString());
     }
+    
+    public void keyReleased(KeyEvent evt) {}
+    
+    public void keyTyped(KeyEvent evt) {}
 }
