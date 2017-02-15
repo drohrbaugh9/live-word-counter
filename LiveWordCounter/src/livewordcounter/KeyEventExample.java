@@ -1,5 +1,7 @@
 // http://www.java2s.com/Code/Java/Event/Keyeventonframe.htm
 
+package livewordcounter;
+
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Point;

@@ -36,6 +36,8 @@
  * KeyEventDemo.java is a 1.4 example that requires no other files.
  */
 
+package livewordcounter;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

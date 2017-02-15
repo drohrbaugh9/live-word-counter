@@ -36,10 +36,10 @@ import javax.swing.*;
 import java.awt.*;              //for layout managers and more
 import java.awt.event.*;        //for action events
 
-public class LiveWordCounter extends JPanel implements KeyListener {
+public class LiveWordCounter extends JPanel implements ActionListener, KeyListener {
     
     boolean firstTime = true;
-    JTextArea textArea;
+    JTextArea textArea, displayArea;
 
     public LiveWordCounter() {
         textArea = new JTextArea("Type here...");
@@ -47,13 +47,19 @@ public class LiveWordCounter extends JPanel implements KeyListener {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         JScrollPane areaScrollPane = new JScrollPane(textArea);
-        areaScrollPane.setVerticalScrollBarPolicy(
-                        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        areaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         areaScrollPane.setPreferredSize(new Dimension(250, 250));
         
-        add(areaScrollPane, BorderLayout.CENTER);
+        displayArea = new JTextArea();
+        displayArea.setEditable(false);
+        JScrollPane displayScrollPane = new JScrollPane(displayArea);
+        displayScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        displayScrollPane.setPreferredSize(new Dimension(250, 250));
         
-        addKeyListener(this);
+        add(areaScrollPane, BorderLayout.WEST);
+        add(displayScrollPane, BorderLayout.EAST);
+        
+        textArea.addKeyListener(this);
     }
 
     public static void main(String[] args) {
@@ -76,10 +82,41 @@ public class LiveWordCounter extends JPanel implements KeyListener {
             textArea.setText("");
             firstTime = false;
         }
-        System.out.println(evt.toString());
+        
+        displayArea.setText("Number of spaces: " + countSpaces(textArea.getText()) + "\nNumber of words: " + countWords(textArea.getText()));
     }
     
-    public void keyReleased(KeyEvent evt) {}
+    public void keyReleased(KeyEvent evt) {
+        displayArea.setText("Number of spaces: " + countSpaces(textArea.getText()) + "\nNumber of words: " + countWords(textArea.getText()));
+    }
     
-    public void keyTyped(KeyEvent evt) {}
+    public void keyTyped(KeyEvent evt) {
+        displayArea.setText("Number of spaces: " + countSpaces(textArea.getText()) + "\nNumber of words: " + countWords(textArea.getText()));
+    }
+    
+    public void actionPerformed(ActionEvent evt) {}
+    
+    public int countSpaces(String str) {
+        int s = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == ' ') s++;
+        }
+        return s;
+    }
+    
+    public int countWords(String str) {
+        int w = 0; char before, after;
+        for (int i = 0; i < (str.length() - 1); i++) {
+            if (str.charAt(i) == ' ') {
+                while (i < str.length() && str.charAt(i + 1) == ' ') {
+                    str = str.substring(0, i + 1) + str.substring(i + 1);
+                }
+            }
+        }
+        for (int j = 1; j < (str.length() - 1); j++) {
+            before = str.charAt(j - 1);
+            after = str.charAt(j + 1);
+        }
+        return w;
+    }
 }
