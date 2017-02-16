@@ -104,15 +104,19 @@ public class LiveWordCounter extends JPanel implements ActionListener, KeyListen
         }
         return s;
     }
-    
-    public int countWords(String str) {
+
+    public static int countWords(String str) {
         int w = 0; char before, current, after;
         for (int i = 1; i < (str.length() - 1); i++) {
             before = str.charAt(i - 1);
             current = str.charAt(i);
             after = str.charAt(i + 1);
             if (current == ' ' && before != ' ') {
-                //int j = i + 1;
+                int j = i + 1;
+              	while (j < str.length() - 1 && str.charAt(j) == ' ') {
+                  	str = str.substring(0, j) + str.substring(j + 1);
+                }
+              	after = str.charAt(j);
                 if (after != ' ') w++;
             }
         }
