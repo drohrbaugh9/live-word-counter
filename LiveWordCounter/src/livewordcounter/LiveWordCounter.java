@@ -39,6 +39,7 @@ import java.awt.event.*;        //for action events
 public class LiveWordCounter extends JPanel implements ActionListener, KeyListener {
     
     boolean firstTime = true;
+    String withoutExtraSpaces = "";
     JTextArea textArea, displayArea;
 
     public LiveWordCounter() {
@@ -105,18 +106,16 @@ public class LiveWordCounter extends JPanel implements ActionListener, KeyListen
     }
     
     public int countWords(String str) {
-        int w = 0; char before, after;
-        for (int i = 0; i < (str.length() - 1); i++) {
-            if (str.charAt(i) == ' ') {
-                while (i < str.length() && str.charAt(i + 1) == ' ') {
-                    str = str.substring(0, i + 1) + str.substring(i + 1);
-                }
+        int w = 0; char before, current, after;
+        for (int i = 1; i < (str.length() - 1); i++) {
+            before = str.charAt(i - 1);
+            current = str.charAt(i);
+            after = str.charAt(i + 1);
+            if (current == ' ' && before != ' ') {
+                //int j = i + 1;
+                if (after != ' ') w++;
             }
         }
-        for (int j = 1; j < (str.length() - 1); j++) {
-            before = str.charAt(j - 1);
-            after = str.charAt(j + 1);
-        }
-        return w;
+        return w + 1;
     }
 }
