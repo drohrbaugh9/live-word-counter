@@ -39,12 +39,11 @@ import java.awt.event.*;        //for action events
 public class LiveWordCounter extends JPanel implements ActionListener, KeyListener {
     
     boolean firstTime = true;
-    String withoutExtraSpaces = "";
+    String defaultString = "Type here...";
     JTextArea textArea, displayArea;
 
     public LiveWordCounter() {
-        textArea = new JTextArea("Type here...");
-        //textArea.setText("Don't type here...");
+        textArea = new JTextArea(defaultString);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         JScrollPane areaScrollPane = new JScrollPane(textArea);
@@ -52,6 +51,7 @@ public class LiveWordCounter extends JPanel implements ActionListener, KeyListen
         areaScrollPane.setPreferredSize(new Dimension(250, 250));
         
         displayArea = new JTextArea();
+        updateWC();
         displayArea.setEditable(false);
         JScrollPane displayScrollPane = new JScrollPane(displayArea);
         displayScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -59,7 +59,6 @@ public class LiveWordCounter extends JPanel implements ActionListener, KeyListen
         
         add(areaScrollPane, BorderLayout.WEST);
         add(displayScrollPane, BorderLayout.EAST);
-        
         textArea.addKeyListener(this);
     }
 
@@ -79,23 +78,30 @@ public class LiveWordCounter extends JPanel implements ActionListener, KeyListen
     }
     
     public void keyPressed(KeyEvent evt) {
-        if (firstTime) {
+        int key = evt.getKeyCode();
+        if (firstTime && (key == KeyEvent.VK_ALPHANUMERIC
+                       || key == KeyEvent.VK_TAB
+                       || key == KeyEvent.VK_ENTER)) {
             textArea.setText("");
             firstTime = false;
         }
         
-        displayArea.setText("Number of spaces: " + countSpaces(textArea.getText()) + "\nNumber of words: " + countWords(textArea.getText()));
+        updateWC();
     }
     
-    public void keyReleased(KeyEvent evt) {
-        displayArea.setText("Number of spaces: " + countSpaces(textArea.getText()) + "\nNumber of words: " + countWords(textArea.getText()));
-    }
+    public void keyReleased(KeyEvent evt) { updateWC(); }
     
-    public void keyTyped(KeyEvent evt) {
-        displayArea.setText("Number of spaces: " + countSpaces(textArea.getText()) + "\nNumber of words: " + countWords(textArea.getText()));
-    }
+    public void keyTyped(KeyEvent evt) { updateWC(); }
     
     public void actionPerformed(ActionEvent evt) {}
+    
+    public void updateWC() {
+        //System.out.println("===\n" + textArea.getText() + "\n===");
+        if (firstTime && textArea.getText().equals(defaultString)) {
+            displayArea.setText("Number of words: 0\nNumber of characters: 0"); return;
+        }
+        displayArea.setText("Number of words: " + countWords(textArea.getText()) + "\nNumber of characters: " + countCharacters(textArea.getText()));
+    }
     
     public int countSpaces(String str) {
         int s = 0;
@@ -107,19 +113,37 @@ public class LiveWordCounter extends JPanel implements ActionListener, KeyListen
 
     public static int countWords(String str) {
         int w = 0; char before, current, after;
-        for (int i = 1; i < (str.length() - 1); i++) {
-            before = str.charAt(i - 1);
-            current = str.charAt(i);
-            after = str.charAt(i + 1);
+        str = str.replaceAll("\n", " ");
+        str = str.replaceAll("\t", " ");
+        boolean allSpaces = true;
+        // if string's length is zero, return 0
+        if (str.length() == 0) return w;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) != ' ') {
+                allSpaces = false;
+                i = str.length();
+            }
+        }
+        for (int j = 1; j < (str.length() - 1); j++) {
+            before = str.charAt(j - 1);
+            current = str.charAt(j);
+            //after = str.charAt(j + 1);
             if (current == ' ' && before != ' ') {
-                int j = i + 1;
-              	while (j < str.length() - 1 && str.charAt(j) == ' ') {
-                  	str = str.substring(0, j) + str.substring(j + 1);
+                int k = j + 1;
+              	while (k < str.length() - 1 && str.charAt(k) == ' ') {
+                  	str = str.substring(0, k) + str.substring(k + 1);
                 }
-              	after = str.charAt(j);
+              	after = str.charAt(k);
                 if (after != ' ') w++;
             }
         }
+        if (allSpaces) return 0;
         return w + 1;
+    }
+    
+    public static int countCharacters(String str) {
+        str = str.replaceAll("\n", "");
+        str = str.replaceAll("\t", "");
+        return str.length();
     }
 }
